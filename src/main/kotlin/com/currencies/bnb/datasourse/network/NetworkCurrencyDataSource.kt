@@ -1,9 +1,10 @@
 package com.currencies.bnb.datasourse.network
 
 import com.currencies.bnb.datasourse.CurrencyDataSource
-import com.currencies.bnb.datasourse.network.dto.CurrencyList
 import com.currencies.bnb.model.Currency
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.ParameterizedTypeReference
+import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Repository
 import org.springframework.web.client.RestTemplate
@@ -15,11 +16,16 @@ class NetworkCurrencyDataSource(
     @Autowired val restTemplate: RestTemplate
 ): CurrencyDataSource {
     override fun retrieveCurrencies(): Collection<Currency> {
-        val response: ResponseEntity<CurrencyList> =
-        restTemplate.getForEntity<CurrencyList>("https://www.nbrb.by/api/exrates/currencies")
 
-        return response.body?.result
-            ?: throw IOException("Couldn't fetch currencies from the network")
+        val response: ResponseEntity<Collection<Currency?>?> = restTemplate.exchange(
+            "https://www.nbrb.by/api/exrates/currencies",
+            HttpMethod.GET,
+            null,
+            object : ParameterizedTypeReference<Collection<Currency?>?>() {})
+
+        val result: Collection<Currency> = response.body as Collection<Currency>
+
+        return result
     }
 
     override fun retrieveCurrency(curId: Int): Currency {

@@ -10,7 +10,7 @@ data class Currency (
     @JsonProperty("Cur_ParentID")
     val parentId: Int,
 
-    @JsonProperty("Cur_Code: String")
+    @JsonProperty("Cur_Code")
     val code: String,
 
     @JsonProperty("Cur_Abbreviation")
