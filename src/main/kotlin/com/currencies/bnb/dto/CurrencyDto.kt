@@ -1,9 +1,8 @@
-package com.currencies.bnb.model
+package com.currencies.bnb.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class Currency (
-
+data class CurrencyDto(
     @JsonProperty("Cur_ID")
     val id: Int,
 
@@ -54,4 +53,4 @@ data class Currency (
 
     @JsonProperty("Cur_DateEnd")
     val dateEnd: String
-    )
+)

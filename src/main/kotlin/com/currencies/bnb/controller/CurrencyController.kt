@@ -1,44 +1,50 @@
 package com.currencies.bnb.controller
 
-import com.currencies.bnb.model.Currency
-import com.currencies.bnb.service.CurrencyService
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import com.currencies.bnb.dto.CurrencyDto
+import com.currencies.bnb.service.ICurrencyService
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/currencies")
-class CurrencyController(private val service: CurrencyService) {
+class CurrencyController(private val ICurrencyService: ICurrencyService) {
 
-    @ExceptionHandler(NoSuchElementException::class)
-    fun handleNotFound(e: NoSuchElementException): ResponseEntity<String>{
-        return ResponseEntity(e.message, HttpStatus.NOT_FOUND)
-    }
-
-    @ExceptionHandler(IllegalArgumentException::class)
-    fun handleNotFound(e: IllegalArgumentException): ResponseEntity<String>{
-        return ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
-    }
 
     @GetMapping
-    fun getCurrencies(): Collection<Currency>{
-        return service.getCurrencies()
+    fun getAll(): List<CurrencyDto>{
+        return ICurrencyService.getAll()
     }
 
-    @GetMapping("/{currencyId}")
-    fun getCurrency(@PathVariable currencyId: Int): Currency{
-        return service.getCurrency(currencyId)
+    @GetMapping("/{id}")
+    fun getOneByID(@PathVariable("id") id: Int): CurrencyDto{
+        return ICurrencyService.getOneById(id)
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    fun addCurrency(@RequestBody currency: Currency): Currency = service.addCurrency(currency)
+    fun create(@RequestBody dto:CurrencyDto): Int{
+        return ICurrencyService.create(dto)
+    }
 
-    @PatchMapping
-    fun updateCurrency(@RequestBody currency: Currency): Currency = service.updateCurrency(currency)
+    @PutMapping("/{id}")
+    fun update(@PathVariable("id") id: Int, @RequestBody dto: CurrencyDto){
+        ICurrencyService.update(id, dto)
+    }
 
-    ///////////questions
-    @DeleteMapping("/{currencyId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteCurrency(@PathVariable currencyId: Int): Unit = service.deleteCurrency(currencyId)
+    @PutMapping("/download")
+    fun updateDbFromApiBnbrb(){
+        ICurrencyService.updateFromNet()
+    }
+
+
+    @DeleteMapping
+    fun delete(@PathVariable("id") id: Int){
+        ICurrencyService.delete(id)
+    }
+
 }
