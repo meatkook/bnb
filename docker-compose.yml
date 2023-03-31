@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  app:
+    container_name: bnb
+    image: 'bnb:latest'
+    build: ./
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/bankData
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root_password
+      - SPRING_JPA_DIALECT
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+  db:
+    image: 'postgres:15.2-alpine'
+    ports:
+      - "5432:5432"
+    container_name: db
+    environment:
+      - POSTGRES_DB=bankData
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root_password
+      - POSTGRES_HOST_AUTH_METHOD="trust"
