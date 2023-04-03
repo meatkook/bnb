@@ -42,7 +42,7 @@ class CurrencyController(private val ICurrencyService: ICurrencyService) {
     }
 
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     fun delete(@PathVariable("id") id: Int){
         ICurrencyService.delete(id)
     }

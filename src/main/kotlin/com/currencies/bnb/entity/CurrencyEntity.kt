@@ -6,7 +6,7 @@ import javax.persistence.*
 @Table(name = "currency")
 class CurrencyEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     val id: Int = 0,
 
